@@ -17,7 +17,7 @@
 
 **n = 10**
 
-**Ввод: `seat()`, `seat()`, `seat()`, `seat()`, `leave()`, `seat()`**
+**Ввод: `seat()`, `seat()`, `seat()`, `seat()`, `leave(4)`, `seat()`**
 
 **Вывод: `seats` == [0, 2, 5, 9]**
 
