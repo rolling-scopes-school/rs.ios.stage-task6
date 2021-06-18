@@ -28,26 +28,72 @@ extension Deck {
 
     init(with type: DeckType) {
         self.type = type
+        self.cards = createDeck(suits: Suit.allCases, values: Value.allCases)
     }
 
-    public func createDeck(suits:[Suit], values:[Value]) -> [Card] {
-        []
+    // MARK: - createDeck
+    public mutating func createDeck(suits:[Suit], values:[Value]) -> [Card] {
+        
+        var newDeck: [Card] = []
+        
+        for suit in suits {
+            for value in values  {
+                let card = Card(suit: suit, value: value, isTrump: false)
+                newDeck.append(card)
+            }
+        }
+        
+        return newDeck
     }
 
-    public func shuffle() {
+    // MARK: - shuffle()
+    public mutating func shuffle() {
+        var items = cards
+        var shuffled = [Card]()
 
+        for _ in 0..<items.count {
+            let rand = Int.random(in: 0..<items.count)
+            shuffled.append(items[rand])
+            items.remove(at: rand)
+        }
+        
+        if shuffled == cards {
+            shuffle()
+        } else {
+            self.cards = shuffled
+        }
     }
-
-    public func defineTrump() {
-
+    
+    // MARK: - defineTrump()
+    public mutating func defineTrump() {
+        trump = cards.last?.suit
+        
+        setTrumpCards(for: trump!)
     }
-
-    public func initialCardsDealForPlayers(players: [Player]) {
-
+    
+    // MARK: -
+    public mutating func initialCardsDealForPlayers(players: [Player]) {
+        for player in players {
+//            print(cards[(cards.count-6)...])
+            player.hand = Array(cards[(cards.count-6)...])
+//            print("player.hand = \(player.hand!)")
+            cards = Array(cards[...(cards.count-7)])
+        }
     }
-
-    public func setTrumpCards(for suit:Suit) {
-
+    
+    // MARK: -
+    public mutating func setTrumpCards(for suit:Suit) {
+        var cardsWithTrumps:[Card] = []
+        
+        for card in cards {
+            if card.suit == trump {
+                cardsWithTrumps.append(Card(suit: card.suit, value: card.value, isTrump: true))
+            } else {
+                cardsWithTrumps.append(Card(suit: card.suit, value: card.value, isTrump: false))
+            }
+        }
+        
+        cards = cardsWithTrumps
     }
 }
 
